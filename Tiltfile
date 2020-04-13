@@ -20,3 +20,20 @@ docker_build('yolkai/base', '.')
 
 # Instruct Tilt to deploy containers with Docker Compose
 docker_compose('./docker-compose.yml')
+
+# A list of local resources for running helpful commands from the Tilt web UI
+local_resource('migrate', cmd='docker exec tilt_backend_1 /bin/bash -c "cd apps/backend/src && npx sequelize-cli db:migrate"',
+    trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False
+)
+local_resource('rollback last', cmd='docker exec tilt_backend_1 /bin/bash -c "cd apps/backend/src && npx sequelize-cli db:migrate:undo"',
+    trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False
+)
+local_resource('rollback all', cmd='docker exec tilt_backend_1 /bin/bash -c "cd apps/backend/src && npx sequelize-cli db:migrate:undo"',
+    trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False
+)
+local_resource('seed', cmd='docker exec tilt_backend_1 /bin/bash -c "cd apps/backend/src && npx sequelize-cli db:seed:all"',
+    trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False
+)
+local_resource('unseed', cmd='docker exec tilt_backend_1 /bin/bash -c "cd apps/backend/src && npx sequelize-cli db:seed:undo:all"',
+    trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False
+)
